@@ -1,0 +1,57 @@
+package PQ;
+
+/**
+ *
+ * @author alexyang
+ */
+public class MinPq<T extends Comparable<T>> {
+    private T[] array;
+    private int n;
+    
+    public MinPq(int capacity){
+        this.array = (T[]) new Comparable[capacity];
+        this.n = 0;
+    }
+    
+    public boolean iasEmpty(){ return n==0;}
+    
+    private void bubblingUp(int index){
+        while(index > 1 && greater(index/2, index)){
+            exchange(index/2, index);
+            index = index/2;
+        }
+    }
+    
+    private void bubblingDown(int index){
+        while(2 * index <= n){
+            int childIndex = 2 * index;
+            if(childIndex < n && greater(childIndex, childIndex + 1)) childIndex++;
+            if(!greater(index, childIndex)) break;
+            exchange(index, childIndex);
+            index = childIndex;
+        }
+    }
+    
+    public void insert(T value){
+        array[++n] = value;
+        bubblingUp(n);
+    }
+    
+    public T delMin(){
+        T min = array[1];
+        exchange(1, n--);
+        bubblingDown(1);
+        array[n+1] = null;
+        return min;
+    }
+    
+    private boolean greater(int i, int j){
+        return array[i].compareTo(array[j]) > 0;
+    }
+    
+    private void exchange(int i, int j){
+        T tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+}
